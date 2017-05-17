@@ -1,0 +1,26 @@
+{
+  "name": "cucumber-api",
+  "version": "0.0.1",
+  "license": "UNLICENSED",
+  "description": "Cucumber support for testing APIs",
+  "repository": {
+    "type": "git",
+    "url": "ssh://git@gitlab.manulife.com:2222/acdc/cucumber-api"
+  },
+  "publishConfig": {
+    "registry": "http://10.234.24.10/artifactory/api/npm/mfc-dig-npm-local"
+  },  
+  "scripts": {
+    "build": "yarn lint",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "cucumber": "1.x",
+    "cucumber-html-reporter": "0.x",
+    "supertest": "2.x"
+  },
+  "devDependencies": {
+    "eslint": "3.x",
+    "eslint-plugin-nodeca": "1.x"
+  }
+}
