@@ -9,14 +9,16 @@
   },
   "publishConfig": {
     "registry": "http://10.234.24.10/artifactory/api/npm/mfc-dig-npm-local"
-  },  
+  },
   "scripts": {
     "build": "yarn lint",
     "lint": "eslint ."
   },
   "dependencies": {
+    "chai": "3.5.0X",
     "cucumber": "1.x",
     "cucumber-html-reporter": "0.x",
+    "lodash": "4.x",
     "supertest": "2.x"
   },
   "devDependencies": {
