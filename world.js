@@ -57,7 +57,11 @@ module.exports = class ApiWorld {
   api(uri) {
     return this.json('get', uri)
       .send()
-      .then(swagger => { this.swagger = swagger; })
-      .catch(swagger => { this.swagger = swagger; });
+      .then(swagger => {
+        this.swagger = swagger;
+      })
+      .catch(swagger => {
+        this.swagger = swagger;
+      });
   }
 };
