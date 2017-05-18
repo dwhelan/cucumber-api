@@ -1,6 +1,6 @@
 {
   "name": "cucumber-api",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "license": "UNLICENSED",
   "description": "Cucumber support for testing APIs",
   "repository": {
@@ -24,9 +24,5 @@
   "devDependencies": {
     "eslint": "3.x",
     "eslint-plugin-nodeca": "1.x"
-  },
-  "engines": {
-    "node": "7.6.0",
-    "yarn": "0.21.2"
   }
 }
