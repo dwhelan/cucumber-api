@@ -1,6 +1,6 @@
 {
   "name": "cucumber-api",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "license": "UNLICENSED",
   "description": "Cucumber support for testing APIs",
   "repository": {
@@ -15,7 +15,7 @@
     "lint": "eslint ."
   },
   "dependencies": {
-    "chai": "3.5.0X",
+    "chai": "3.x",
     "cucumber": "1.x",
     "cucumber-html-reporter": "0.x",
     "lodash": "4.x",
