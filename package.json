@@ -1,6 +1,6 @@
 {
   "name": "cucumber-api",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "license": "UNLICENSED",
   "description": "Cucumber support for testing APIs",
   "repository": {
@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "chai": "3.x",
-    "cucumber": "1.x",
+    "cucumber": "^2.3.0",
     "cucumber-html-reporter": "0.x",
     "lodash": "4.x",
     "supertest": "2.x"

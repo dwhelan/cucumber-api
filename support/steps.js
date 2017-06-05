@@ -1,20 +1,23 @@
 'use strict';
 
-const expect = require('chai').expect;
-require('chai').should();
+const chai = require('chai');
+const expect = chai.expect;
+chai.should();
 
-module.exports = function () {
+const {defineSupportCode} = require(process.cwd() + '/node_modules/cucumber');
 
-  this.When(/^I get from "([^"]*)"$/i, function(uri, model) {
+defineSupportCode(function({When, Then}) {
+  console.log('steps defined in cucumber-api');
+  When(/^I get from "([^"]*)"$/i, function(uri, model) {
     this.model = model;
     return this.httpGet(uri);
   });
 
-  this.When(/^I get the api definition$/i, function () {
+  When(/^I get the api definition$/i, function () {
     return this.api('/explorer/swagger.json');
   });
 
-  this.Then(/^the "([^"]*)" "([^"]*)" should be "([^"]*)"$/, function (model, property, expected) {
+  Then(/^the "([^"]*)" "([^"]*)" should be "([^"]*)"$/, function (model, property, expected) {
     const field = this.fieldNameOf(model, property);
     const value = this.getValue(field);
 
@@ -27,7 +30,7 @@ module.exports = function () {
   });
 
   // Remove duplication with the method above (only difference is how model is set)
-  this.Then(/^the "([^"]*)" should be "([^"]*)"$/, function (property, expected) {
+  Then(/^the "([^"]*)" should be "([^"]*)"$/, function (property, expected) {
     const field = this.fieldNameOf(this.model, property);
     const value = this.getValue(field);
 
@@ -38,4 +41,4 @@ module.exports = function () {
       value.should.eql(expected);
     }
   });
-};
+});

@@ -1,6 +1,6 @@
 'use strict';
 
-const World = require('./world');
+const World = require('./support/world');
 
 module.exports = {
   world: World
