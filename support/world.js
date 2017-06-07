@@ -10,9 +10,9 @@ chai.should();
 
 module.exports = class ApiWorld {
   constructor(config) {
-    this.request = {};
+    this.request  = {};
     this.response = {};
-    this.swagger = {};
+    this.swagger  = {};
   }
 
   json(verb, url, headers) {
@@ -41,21 +41,15 @@ module.exports = class ApiWorld {
     return this.httpRequest('post', uri);
   }
 
-  fieldNameOf(model, fieldOrDescription) {
-    let field = fieldOrDescription;
-
-    if (this.swagger.body) {
-      const definition = this.swagger.body.definitions[model];
-      const properties = definition.properties;
-      field = _.findKey(properties, ['description', fieldOrDescription]) || fieldOrDescription;
-    }
-
-    return field;
-  }
-
-  getValue(path) {
-    const value = _.get(this.response.body.data, path);
-    return value === undefined ? undefined : value.toString();
+  api(uri) {
+    return this.json('get', uri)
+      .send()
+      .then(swagger => {
+        this.swagger = swagger;
+      })
+      .catch(swagger => {
+        this.swagger = swagger;
+      });
   }
 
   assertValue(fieldOrDescription, expected, model) {
@@ -70,14 +64,18 @@ module.exports = class ApiWorld {
     }
   }
 
-  api(uri) {
-    return this.json('get', uri)
-      .send()
-      .then(swagger => {
-        this.swagger = swagger;
-      })
-      .catch(swagger => {
-        this.swagger = swagger;
-      });
+  fieldNameOf(model, fieldOrDescription) {
+    if (!this.swagger.body) {
+      return fieldOrDescription;
+    }
+
+    const definition = this.swagger.body.definitions[model];
+    const properties = definition.properties;
+    return _.findKey(properties, ['description', fieldOrDescription]) || fieldOrDescription;
+  }
+
+  getValue(path) {
+    const value = _.get(this.response.body.data, path);
+    return value === undefined ? undefined : value.toString();
   }
 };
