@@ -1,5 +1,10 @@
 'use strict';
 
+const chai = require('chai');
+const chaiHttp = require('chai-http');
+
+chai.use(chaiHttp);
+
 const {defineSupportCode} = require(process.cwd() + '/node_modules/cucumber');
 
 defineSupportCode(function({When, Then}) {
@@ -20,6 +25,6 @@ defineSupportCode(function({When, Then}) {
   });
 
   Then(/^the response status should be "([1-5]\d\d)"$/, function(status) {
-    this.assertStatus(status);
+    this.response.should.have.status(status);
   });
 });

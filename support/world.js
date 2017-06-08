@@ -64,10 +64,6 @@ module.exports = class ApiWorld {
     }
   }
 
-  assertStatus(expected) {
-    this.response.status.should.eql(parseInt(expected));
-  }
-
   fieldNameOf(model, fieldOrDescription) {
     if (!this.swagger.body) {
       return fieldOrDescription;
