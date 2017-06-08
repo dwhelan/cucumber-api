@@ -15,8 +15,8 @@ module.exports = class ApiWorld {
     this.swagger  = {};
   }
 
-  json(verb, url, headers) {
-    const requestWithHeaders = request(app)[verb](url);
+  json(verb, path, headers) {
+    const requestWithHeaders = request(app)[verb](path);
 
     for (let key in headers) {
       requestWithHeaders.set(key, headers[key]);
@@ -25,24 +25,24 @@ module.exports = class ApiWorld {
     return requestWithHeaders;
   }
 
-  httpRequest(verb, uri) {
-    return this.json(verb, uri, this.headers)
+  httpRequest(verb, path) {
+    return this.json(verb, path, this.headers)
       .send(this.requestBody)
       .then(response => { this.response = response; })
       .catch(response => { this.response = response; });
   }
 
-  httpGet(uri, model) {
+  httpGet(path, model) {
     this.model = model;
-    return this.httpRequest('get', uri);
+    return this.httpRequest('get', path);
   }
 
-  httpPost(uri) {
-    return this.httpRequest('post', uri);
+  httpPost(path) {
+    return this.httpRequest('post', path);
   }
 
-  api(uri) {
-    return this.json('get', uri)
+  api(path) {
+    return this.json('get', path)
       .send()
       .then(swagger => {
         this.swagger = swagger;
