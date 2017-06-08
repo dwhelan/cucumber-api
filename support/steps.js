@@ -18,4 +18,8 @@ defineSupportCode(function({When, Then}) {
   Then(/^the "([^"]*)" should be "([^"]*)"$/, function(field, expected) {
     this.assertValue(field, expected);
   });
+
+  Then(/^the response status should be "([1-5]\d\d)"$/, function(status) {
+    this.assertStatus(status);
+  });
 });
