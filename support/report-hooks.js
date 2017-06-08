@@ -5,7 +5,7 @@ const reporter = require('cucumber-html-reporter');
 
 defineSupportCode(function({registerHandler}) {
   registerHandler('AfterFeatures', features => {
-    var options = {
+    const options = {
       theme: 'bootstrap',
       jsonDir: 'reports/cucumber',
       output: 'reports/cucumber_report.html',

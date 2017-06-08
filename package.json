@@ -11,14 +11,17 @@
     "registry": "http://10.234.24.10/artifactory/api/npm/mfc-dig-npm-local"
   },
   "scripts": {
-    "build": "yarn lint",
-    "lint": "eslint ."
+    "build": "yarn lint && yarn test",
+    "lint": "eslint .",
+    "test": "mocha --recursive --colors"
   },
   "dependencies": {
     "chai": "3.x",
-    "cucumber": "^2.3.0",
+    "chai-http": "3.x",
+    "cucumber": "2.x",
     "cucumber-html-reporter": "0.x",
     "lodash": "4.x",
+    "mocha": "^3.4.2",
     "supertest": "2.x"
   },
   "devDependencies": {
