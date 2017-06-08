@@ -12,6 +12,10 @@ defineSupportCode(function({When, Then}) {
     return this.httpGet(uri);
   });
 
+  When(/^I get from "([^"]*)" with headers$/i, function(uri, headers) {
+    return this.httpGet(uri, headers.rowsHash());
+  });
+
   When(/^I get the api definition$/i, function() {
     return this.api('/explorer/swagger.json');
   });

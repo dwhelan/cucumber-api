@@ -25,16 +25,16 @@ module.exports = class ApiWorld {
     return requestWithHeaders;
   }
 
-  httpRequest(verb, path) {
-    return this.json(verb, path, this.headers)
+  httpRequest(verb, path, headers) {
+    return this.json(verb, path, headers || this.headers)
       .send(this.requestBody)
-      .then(response => { this.response = response; })
+      .then(response  => { this.response = response; })
       .catch(response => { this.response = response; });
   }
 
-  httpGet(path, model) {
+  httpGet(path, headers, model) {
     this.model = model;
-    return this.httpRequest('get', path);
+    return this.httpRequest('get', path, headers);
   }
 
   httpPost(path) {
@@ -44,12 +44,8 @@ module.exports = class ApiWorld {
   api(path) {
     return this.json('get', path)
       .send()
-      .then(swagger => {
-        this.swagger = swagger;
-      })
-      .catch(swagger => {
-        this.swagger = swagger;
-      });
+      .then(swagger  => { this.swagger = swagger; })
+      .catch(swagger => { this.swagger = swagger; });
   }
 
   assertValue(fieldOrDescription, expected, model) {
