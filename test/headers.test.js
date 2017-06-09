@@ -11,24 +11,24 @@ describe('headers', () => {
       expect(fn).to.throw("'headers' is undefined");
     });
 
-    it('should throw if header is not present', () => {
+    it('should throw if the header is not present', () => {
       const fn = () => { validateHeader({}, 'common'); };
       expect(fn).to.throw("header 'common' is not present");
     });
 
-    it('should allow an empty value', () => {
+    it('should allow an empty value for a header', () => {
       validateHeader({common: ''}, 'common');
     });
 
-    it('should allow any value if the expected value is not provided', () => {
+    it('should allow any header value if the expected value is not provided', () => {
       validateHeader({common: 'any value'}, 'common');
     });
 
-    it('should allow a correct value', () => {
+    it('should allow a correct header value', () => {
       validateHeader({common: 'expected'}, 'common', 'expected');
     });
 
-    it('should throw if header value does not equal expected value', () => {
+    it('should throw if the header value does not equal the expected value', () => {
       const fn = () => { validateHeader({common: 'incorrect'}, 'common', 'expected'); };
       expect(fn).to.throw("expected 'incorrect' to deeply equal 'expected'");
     });
@@ -38,7 +38,7 @@ describe('headers', () => {
       validateHeader({common: ''}, 'COMMON');
     });
 
-    it('should throw if header value differs in case from expected value', () => {
+    it('should throw if the header value differs in case from the expected value', () => {
       const fn = () => { validateHeader({common: 'VALUE'}, 'common', 'value'); };
       expect(fn).to.throw("expected 'VALUE' to deeply equal 'value'");
     });
@@ -49,12 +49,12 @@ describe('headers', () => {
       validateHeader({date: 'Thu, 08 Jun 2017 01:05:33 GMT'}, 'date');
     });
 
-    it('should not allow an invalid date', () => {
+    it('should throw with an invalid date', () => {
       const fn = () => { validateHeader({date: 'XXX, 08 Jun 2017 01:05:33 GMT'}, 'date'); };
       expect(fn).to.throw(/expected .*XXX.* to match/);
     });
 
-    it('should not allow an invalid DATE', () => {
+    it('should treat headers names as case insensitive', () => {
       const fn = () => { validateHeader({date: 'XXX, 08 Jun 2017 01:05:33 GMT'}, 'DATE'); };
       expect(fn).to.throw(/expected .*XXX.* to match/);
     });

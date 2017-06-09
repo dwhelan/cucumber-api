@@ -2,7 +2,8 @@
 
 const _ = require('lodash');
 const request = require('supertest');
-const app = require(process.cwd() + '/server/server');
+const { URL } = require('url');
+const path = require('path');
 
 const chai = require('chai');
 const expect = chai.expect;
@@ -10,13 +11,21 @@ chai.should();
 
 module.exports = class ApiWorld {
   constructor(config) {
+    console.log('config', config);
     this.request  = {};
     this.response = {};
     this.swagger  = {};
+
+    try {
+      this.server = new URL(config.parameters.server).toString().slice(0, -1);
+    } catch (err) {
+      const localFile = config.parameters.server || '/server/server';
+      this.server = require(path.join(process.cwd(), localFile));
+    }
   }
 
   json(verb, path, headers) {
-    const requestWithHeaders = request(app)[verb](path);
+    const requestWithHeaders = request(this.server)[verb](path);
 
     for (let key in headers) {
       requestWithHeaders.set(key, headers[key]);
@@ -26,7 +35,7 @@ module.exports = class ApiWorld {
   }
 
   httpRequest(verb, path, headers) {
-    return this.json(verb, path, headers || this.headers)
+    return this.json(verb, path, headers)
       .send(this.requestBody)
       .then(response  => { this.response = response; })
       .catch(response => { this.response = response; });

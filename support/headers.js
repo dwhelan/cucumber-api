@@ -11,7 +11,7 @@ const expect = chai.expect;
 const {defineSupportCode} = require(process.cwd() + '/node_modules/cucumber');
 
 const headerRegexs = {
-  date: /^(Sun|Mon|Tue|Wed|Thu|Fri|Sat),\s+(0?[1-9]|[1-2][0-9]|3[01])\s+(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s+2[0-9]{3}\s+[0-1][0-9]:[0-5][0-9]:[0-5][0-9]\s+GMT/
+  date: /^(Sun|Mon|Tue|Wed|Thu|Fri|Sat),\s+(0?[1-9]|[1-2][0-9]|3[01])\s+(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s+2[0-9]{3}\s+([0-1][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]\s+GMT$/
 };
 
 const headerValue = (headers, name) => {
