@@ -11,7 +11,6 @@ chai.should();
 
 module.exports = class ApiWorld {
   constructor(config) {
-    console.log('config', config);
     this.request  = {};
     this.response = {};
     this.swagger  = {};
@@ -19,7 +18,7 @@ module.exports = class ApiWorld {
     try {
       this.server = new URL(config.parameters.server).toString().slice(0, -1);
     } catch (err) {
-      const localFile = config.parameters.server || '/server/server';
+      const localFile = _.get(config, 'parameters.server') || '/server/server';
       this.server = require(path.join(process.cwd(), localFile));
     }
   }
@@ -36,7 +35,7 @@ module.exports = class ApiWorld {
 
   httpRequest(verb, path, headers) {
     return this.json(verb, path, headers)
-      .send(this.requestBody)
+      .send(this.request)
       .then(response  => { this.response = response; })
       .catch(response => { this.response = response; });
   }
@@ -46,8 +45,9 @@ module.exports = class ApiWorld {
     return this.httpRequest('get', path, headers);
   }
 
-  httpPost(path) {
-    return this.httpRequest('post', path);
+  httpPost(path, request, headers) {
+    this.request = request;
+    return this.httpRequest('post', path, headers);
   }
 
   api(path) {
@@ -61,12 +61,36 @@ module.exports = class ApiWorld {
     const field = this.fieldNameOf(model || this.model, fieldOrDescription);
     const value = this.getValue(field);
 
-    if (expected === 'undefined') {
+    if (expected === 'undefined' || expected === undefined) {
       expect(value).to.be.undefined;
     } else {
       expect(value, `Could not find field '${fieldOrDescription}'`).to.not.be.undefined;
-      value.should.eql(expected);
+      expect(value, `Field '${fieldOrDescription}' is not as expected`).to.eql(expected);
     }
+  }
+
+  static buildPath(...pathElements) {
+    return _
+      .chain(pathElements)
+      .flattenDeep()
+      .compact()
+      .map(pathElement => _.camelCase(pathElement))
+      .join('.')
+      .value();
+  }
+
+  addToRequest(object, ...path) {
+    _.forEach(object, (value, key) => _.set(this.request, ApiWorld.buildPath(path, key), value));
+  }
+
+  addToRequestWithKey(object, key, ...path) {
+    const obj = _.clone(object);
+    delete obj[key];
+    this.addToRequest(obj, path, object[key]);
+  }
+
+  addManyToRequest(objects, ...path) {
+    _.forEach(objects, object => this.addToRequest(object, path));
   }
 
   fieldNameOf(model, fieldOrDescription) {
@@ -80,7 +104,6 @@ module.exports = class ApiWorld {
   }
 
   getValue(path) {
-    const value = _.get(this.response.body.data, path);
-    return value === undefined ? undefined : value.toString();
+    return _.get(this.response.body.data, path);
   }
 };
