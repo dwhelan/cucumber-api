@@ -31,4 +31,8 @@ defineSupportCode(function({When, Then}) {
   Then(/^the response status should be "([1-5]\d\d)"$/, function(status) {
     this.response.should.have.status(status);
   });
+
+  Then('the response should be valid', function () {
+    this.response.should.have.status(200);
+  });
 });
