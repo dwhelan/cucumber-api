@@ -2,17 +2,31 @@
 
 const _ = require('lodash');
 const request = require('supertest');
-const app = require(process.cwd() + '/server/server');
+const { URL } = require('url');
+const path = require('path');
 
-module.exports = class ApiWorld {
+const {defineSupportCode} = require(process.cwd() + '/node_modules/cucumber');
+
+const chai = require('chai');
+const expect = chai.expect;
+chai.should();
+
+const ApiWorld = class ApiWorld {
   constructor(config) {
-    this.request = {};
+    this.request  = {};
     this.response = {};
-    this.swagger = {};
+    this.swagger  = {};
+
+    try {
+      this.server = new URL(config.parameters.server).toString().slice(0, -1);
+    } catch (err) {
+      const localFile = _.get(config, 'parameters.server') || '/server/server';
+      this.server = require(path.join(process.cwd(), localFile));
+    }
   }
 
-  json(verb, url, headers) {
-    const requestWithHeaders = request(app)[verb](url);
+  json(verb, path, headers) {
+    const requestWithHeaders = request(this.server)[verb](path);
 
     for (let key in headers) {
       requestWithHeaders.set(key, headers[key]);
@@ -21,47 +35,82 @@ module.exports = class ApiWorld {
     return requestWithHeaders;
   }
 
-  httpRequest(verb, uri) {
-    return this.json(verb, uri, this.headers)
-      .send(this.requestBody)
-      .then(response => { this.response = response; })
+  httpRequest(verb, path, headers) {
+    return this.json(verb, path, headers)
+      .send(this.request)
+      .then(response  => { this.response = response; })
       .catch(response => { this.response = response; });
   }
 
-  httpGet(uri, model) {
+  httpGet(path, headers, model) {
     this.model = model;
-    return this.httpRequest('get', uri);
+    return this.httpRequest('get', path, headers);
   }
 
-  httpPost(uri) {
-    return this.httpRequest('post', uri);
+  httpPost(path, request, headers) {
+    this.request = request;
+    return this.httpRequest('post', path, headers);
+  }
+
+  api(path) {
+    return this.json('get', path)
+      .send()
+      .then(swagger  => { this.swagger = swagger; })
+      .catch(swagger => { this.swagger = swagger; });
+  }
+
+  assertValue(fieldOrDescription, expected, model) {
+    const field = this.fieldNameOf(model || this.model, fieldOrDescription);
+    const value = this.getValue(field);
+
+    if (expected === 'undefined' || expected === undefined) {
+      expect(value).to.be.undefined;
+    } else {
+      expect(value, `Could not find field '${fieldOrDescription}'`).to.not.be.undefined;
+      expect(value, `Field '${fieldOrDescription}' is not as expected`).to.eql(expected);
+    }
+  }
+
+  static buildPath(...pathElements) {
+    return _
+      .chain(pathElements)
+      .flattenDeep()
+      .compact()
+      .map(pathElement => _.camelCase(pathElement))
+      .join('.')
+      .value();
+  }
+
+  addToRequest(object, ...path) {
+    if (_.isEmpty(object)) {
+      return;
+    }
+    const obj = _.clone(object);
+    delete obj[''];
+    _.forEach(obj, (value, key) => _.set(this.request, ApiWorld.buildPath(path, object[''], key), value));
+  }
+
+  addManyToRequest(objects, ...path) {
+    _.forEach(objects, object => this.addToRequest(object, path));
   }
 
   fieldNameOf(model, fieldOrDescription) {
-    let field = fieldOrDescription;
-
-    if (this.swagger.body) {
-      const definition = this.swagger.body.definitions[model];
-      const properties = definition.properties;
-      field = _.findKey(properties, ['description', fieldOrDescription]) || fieldOrDescription;
+    if (!this.swagger.body) {
+      return fieldOrDescription;
     }
 
-    return field;
+    const definition = this.swagger.body.definitions[model];
+    const properties = definition.properties;
+    return _.findKey(properties, ['description', fieldOrDescription]) || fieldOrDescription;
   }
 
   getValue(path) {
-    const value = _.get(this.response.body.data, path);
-    return value === undefined ? undefined : value.toString();
-  }
-
-  api(uri) {
-    return this.json('get', uri)
-      .send()
-      .then(swagger => {
-        this.swagger = swagger;
-      })
-      .catch(swagger => {
-        this.swagger = swagger;
-      });
+    return _.get(this.response.body.data, path);
   }
 };
+
+module.exports = ApiWorld;
+
+defineSupportCode(function({setWorldConstructor}) {
+  setWorldConstructor(ApiWorld);
+});

@@ -1,11 +1,11 @@
 'use strict';
 
+const {defineSupportCode} = require(process.cwd() + '/node_modules/cucumber');
 const reporter = require('cucumber-html-reporter');
 
-module.exports = function () {
-
-  this.AfterFeatures(features => {
-    var options = {
+defineSupportCode(function({registerHandler}) {
+  registerHandler('AfterFeatures', features => {
+    const options = {
       theme: 'bootstrap',
       jsonDir: 'reports/cucumber',
       output: 'reports/cucumber_report.html',
@@ -17,4 +17,4 @@ module.exports = function () {
     };
     reporter.generate(options);
   });
-};
+});

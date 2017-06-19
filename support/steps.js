@@ -1,44 +1,38 @@
 'use strict';
 
 const chai = require('chai');
-const expect = chai.expect;
-chai.should();
+const chaiHttp = require('chai-http');
+
+chai.use(chaiHttp);
 
 const {defineSupportCode} = require(process.cwd() + '/node_modules/cucumber');
 
 defineSupportCode(function({When, Then}) {
-  console.log('steps defined in cucumber-api');
-  When(/^I get from "([^"]*)"$/i, function(uri, model) {
-    this.model = model;
+  When(/^I get from "([^"]*)"$/i, function(uri) {
     return this.httpGet(uri);
   });
 
-  When(/^I get the api definition$/i, function () {
+  When(/^I get from "([^"]*)" with headers$/i, function(uri, headers) {
+    return this.httpGet(uri, headers.rowsHash());
+  });
+
+  When(/^I get the api definition$/i, function() {
     return this.api('/explorer/swagger.json');
   });
 
-  Then(/^the "([^"]*)" "([^"]*)" should be "([^"]*)"$/, function (model, property, expected) {
-    const field = this.fieldNameOf(model, property);
-    const value = this.getValue(field);
-
-    if (expected === 'undefined') {
-      expect(value).to.be.undefined;
-    } else {
-      expect(value, `Could not find field '${property}'`).to.not.be.undefined;
-      value.should.eql(expected);
-    }
+  Then(/^the "([^"]*)" "([^"]*)" should be "([^"]*)"$/, function (model, field, expected) {
+    this.assertValue(field, expected, model);
   });
 
-  // Remove duplication with the method above (only difference is how model is set)
-  Then(/^the "([^"]*)" should be "([^"]*)"$/, function (property, expected) {
-    const field = this.fieldNameOf(this.model, property);
-    const value = this.getValue(field);
+  Then(/^the "([^"]*)" should be "([^"]*)"$/, function(field, expected) {
+    this.assertValue(field, expected);
+  });
 
-    if (expected === 'undefined') {
-      expect(value).to.be.undefined;
-    } else {
-      expect(value, `Could not find field '${property}'`).to.not.be.undefined;
-      value.should.eql(expected);
-    }
+  Then(/^the response status should be "([1-5]\d\d)"$/, function(status) {
+    this.response.should.have.status(status);
+  });
+
+  Then('the response should be valid', function () {
+    this.response.should.have.status(200);
   });
 });
