@@ -79,12 +79,6 @@ describe('ApiWorld', () => {
       apiWorld.addManyToRequest([{ a: 1 }, { b: 2 }]);
       apiWorld.request.should.eql({ a: 1, b: 2 });
     });
-
-    it('should ignore undefined or null objects', () => {
-      const apiWorld = new ApiWorld();
-      apiWorld.addManyToRequest([undefined, { a: 1 }, null, { b: 2 }]);
-      apiWorld.request.should.eql({ a: 1, b: 2 });
-    });
   });
 
   describe('addToRequest', () => {
@@ -125,19 +119,17 @@ describe('ApiWorld', () => {
       apiWorld.addToRequest({ foo: 'bar' }, ['data', 'stuff']);
       apiWorld.request.should.eql({ data: { stuff: { foo: 'bar' } } });
     });
-  });
 
-  describe('addToRequestWithKey', () => {
-    it('should add an object using the given key value as the path', () => {
+    it('should ignore undefined objects', () => {
       const apiWorld = new ApiWorld();
-      apiWorld.addToRequestWithKey({ a: '1', name: 'foo' }, 'name');
-      apiWorld.request.should.eql({ foo: { a: '1' } });
+      apiWorld.addToRequest(undefined);
+      apiWorld.request.should.eql({});
     });
 
-    it('should allow additional paths', () => {
+    it('should ignore null objects', () => {
       const apiWorld = new ApiWorld();
-      apiWorld.addToRequestWithKey({ a: '1', name: 'foo' }, 'name', 'data');
-      apiWorld.request.should.eql({ data: { foo: { a: '1' } } });
+      apiWorld.addToRequest(null);
+      apiWorld.request.should.eql({});
     });
   });
 });

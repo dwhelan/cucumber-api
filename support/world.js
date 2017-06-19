@@ -5,11 +5,13 @@ const request = require('supertest');
 const { URL } = require('url');
 const path = require('path');
 
+const {defineSupportCode} = require(process.cwd() + '/node_modules/cucumber');
+
 const chai = require('chai');
 const expect = chai.expect;
 chai.should();
 
-module.exports = class ApiWorld {
+const ApiWorld = class ApiWorld {
   constructor(config) {
     this.request  = {};
     this.response = {};
@@ -80,13 +82,12 @@ module.exports = class ApiWorld {
   }
 
   addToRequest(object, ...path) {
-    _.forEach(object, (value, key) => _.set(this.request, ApiWorld.buildPath(path, key), value));
-  }
-
-  addToRequestWithKey(object, key, ...path) {
+    if (_.isEmpty(object)) {
+      return;
+    }
     const obj = _.clone(object);
-    delete obj[key];
-    this.addToRequest(obj, path, object[key]);
+    delete obj[''];
+    _.forEach(obj, (value, key) => _.set(this.request, ApiWorld.buildPath(path, object[''], key), value));
   }
 
   addManyToRequest(objects, ...path) {
@@ -107,3 +108,9 @@ module.exports = class ApiWorld {
     return _.get(this.response.body.data, path);
   }
 };
+
+module.exports = ApiWorld;
+
+defineSupportCode(function({setWorldConstructor}) {
+  setWorldConstructor(ApiWorld);
+});
