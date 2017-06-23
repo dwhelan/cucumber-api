@@ -137,10 +137,22 @@ describe('ApiWorld', () => {
         apiWorld.request.should.eql({ data: { foo: 'bar' } });
       });
 
+      it('should camel case the path', () => {
+        const apiWorld = new ApiWorld();
+        apiWorld.addToRequest('Data', { foo: 'bar' });
+        apiWorld.request.should.eql({ data: { foo: 'bar' } });
+      });
+
       it('should allow path to be an array', () => {
         const apiWorld = new ApiWorld();
         apiWorld.addToRequest(['data', 'stuff'], { foo: 'bar' });
         apiWorld.request.should.eql({ data: { stuff: { foo: 'bar' } } });
+      });
+
+      it('should allow path to have multiple parta', () => {
+        const apiWorld = new ApiWorld();
+        apiWorld.addToRequest(['Data 1. Data 2', 'stuff'], { foo: 'bar' });
+        apiWorld.request.should.eql({ data1: { data2: { stuff: { foo: 'bar' } } }});
       });
 
       it('should treat an empty object key as a sub-path', () => {
