@@ -76,6 +76,8 @@ const ApiWorld = class ApiWorld {
       .chain(pathElements)
       .flattenDeep()
       .compact()
+      .map(pathElement => pathElement.split('.'))
+      .flattenDeep()
       .map(pathElement => _.camelCase(pathElement))
       .join('.')
       .value();

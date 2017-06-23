@@ -53,6 +53,10 @@ describe('ApiWorld', () => {
     it('should support array arguments by flatting them', () => {
       expect(ApiWorld.buildPath(['The', ['End', 'IsNear']])).to.eql('the.end.isNear');
     });
+
+    it('should use a "." as a separator within path elements', () => {
+      expect(ApiWorld.buildPath(['a.b', ['c.d', 'e.f']])).to.eql('a.b.c.d.e.f');
+    });
   });
 
   describe('addManyToRequest', () => {
