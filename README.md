@@ -14,8 +14,8 @@ yarn add cucumber-api --dev
 - To be added
 
 # Roadmap
+- support options to configure camel case conversion etc for field names in cukes
 - support complex models with nested models and arrays etc.
-- support running with 'app' or full url
 - disable logging when running with 'app'
 
 # Known Issues

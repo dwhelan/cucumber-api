@@ -59,81 +59,95 @@ describe('ApiWorld', () => {
     });
   });
 
-  describe('addManyToRequest', () => {
-    it('should allow an undefined object array', () => {
-      const apiWorld = new ApiWorld();
-      apiWorld.addManyToRequest(undefined);
-      apiWorld.request.should.eql({});
-    });
-
-    it('should allow an empty object array', () => {
-      const apiWorld = new ApiWorld();
-      apiWorld.addManyToRequest([]);
-      apiWorld.request.should.eql({});
-    });
-
-    it('should add a single object', () => {
-      const apiWorld = new ApiWorld();
-      apiWorld.addManyToRequest([{ a: 1 }]);
-      apiWorld.request.should.eql({ a: 1 });
-    });
-
-    it('should add multiple objects', () => {
-      const apiWorld = new ApiWorld();
-      apiWorld.addManyToRequest([{ a: 1 }, { b: 2 }]);
-      apiWorld.request.should.eql({ a: 1, b: 2 });
-    });
-  });
-
   describe('addToRequest', () => {
-    it('should set the request if it has not been initialized', () => {
-      const apiWorld = new ApiWorld();
-      apiWorld.addToRequest({ foo: 'bar' });
-      apiWorld.request.should.eql({ foo: 'bar' });
+    describe('object to be added', () => {
+      it('should set the request if it has not been initialized', () => {
+        const apiWorld = new ApiWorld();
+        apiWorld.addToRequest('', { foo: 'bar' });
+        apiWorld.request.should.eql({ foo: 'bar' });
+      });
+
+      it('should add a value if it does not exist', () => {
+        const apiWorld = new ApiWorld();
+        apiWorld.request = { foo: 'bar' };
+        apiWorld.addToRequest('', { foo2: 'bar2'});
+        apiWorld.request.should.eql({ foo: 'bar', foo2: 'bar2' });
+      });
+
+      it('should overwrite the value if it exists', () => {
+        const apiWorld = new ApiWorld();
+        apiWorld.request = { foo: 'bar' };
+        apiWorld.addToRequest('', { foo: 'baz' });
+        apiWorld.request.should.eql({ foo: 'baz' });
+      });
+
+      it('should allow zero objects to be added', () => {
+        const apiWorld = new ApiWorld();
+        apiWorld.addToRequest('');
+        apiWorld.request.should.eql({});
+      });
+
+      it('should allow an empty object array', () => {
+        const apiWorld = new ApiWorld();
+        apiWorld.addToRequest('', []);
+        apiWorld.request.should.eql({});
+      });
+
+      it('should add a single object', () => {
+        const apiWorld = new ApiWorld();
+        apiWorld.addToRequest('', { a: 1 });
+        apiWorld.request.should.eql({ a: 1 });
+      });
+
+      it('should add multiple objects', () => {
+        const apiWorld = new ApiWorld();
+        apiWorld.addToRequest('', { a: 1 }, { b: 2 });
+        apiWorld.request.should.eql({ a: 1, b: 2 });
+      });
+
+      it('should add an object array', () => {
+        const apiWorld = new ApiWorld();
+        apiWorld.addToRequest('', [{ a: 1 }, { b: 2 }]);
+        apiWorld.request.should.eql({ a: 1, b: 2 });
+      });
+
+      it('should ignore undefined objects', () => {
+        const apiWorld = new ApiWorld();
+        apiWorld.addToRequest('', undefined);
+        apiWorld.request.should.eql({});
+      });
+
+      it('should ignore null objects', () => {
+        const apiWorld = new ApiWorld();
+        apiWorld.addToRequest('', null);
+        apiWorld.request.should.eql({});
+      });
     });
 
-    it('should add a value if the value does not already exist', () => {
-      const apiWorld = new ApiWorld();
-      apiWorld.request = { foo: 'bar' };
-      apiWorld.addToRequest({ foo2: 'bar2'});
-      apiWorld.request.should.eql({ foo: 'bar', foo2: 'bar2' });
-    });
+    describe('path to add object at', () => {
+      it('should allow an undefined path', () => {
+        const apiWorld = new ApiWorld();
+        apiWorld.addToRequest(undefined, { foo: 'bar' });
+        apiWorld.request.should.eql({ foo: 'bar' });
+      });
 
-    it('should overwrite the value if it already exists', () => {
-      const apiWorld = new ApiWorld();
-      apiWorld.request = { foo: 'bar' };
-      apiWorld.addToRequest({ foo: 'baz' });
-      apiWorld.request.should.eql({ foo: 'baz' });
-    });
+      it('should use the given path if provided', () => {
+        const apiWorld = new ApiWorld();
+        apiWorld.addToRequest('data', { foo: 'bar' });
+        apiWorld.request.should.eql({ data: { foo: 'bar' } });
+      });
 
-    it('should use the given root path if provided', () => {
-      const apiWorld = new ApiWorld();
-      apiWorld.addToRequest({ foo: 'bar' }, 'data');
-      apiWorld.request.should.eql({ data: { foo: 'bar' } });
-    });
+      it('should allow path to be an array', () => {
+        const apiWorld = new ApiWorld();
+        apiWorld.addToRequest(['data', 'stuff'], { foo: 'bar' });
+        apiWorld.request.should.eql({ data: { stuff: { foo: 'bar' } } });
+      });
 
-    it('should support multiple path elements', () => {
-      const apiWorld = new ApiWorld();
-      apiWorld.addToRequest({ foo: 'bar' }, 'data', 'stuff');
-      apiWorld.request.should.eql({ data: { stuff: { foo: 'bar' } } });
-    });
-
-    it('should allow path elements to be arrays', () => {
-      const apiWorld = new ApiWorld();
-      apiWorld.addToRequest({ foo: 'bar' }, ['data', 'stuff']);
-      apiWorld.request.should.eql({ data: { stuff: { foo: 'bar' } } });
-    });
-
-    it('should ignore undefined objects', () => {
-      const apiWorld = new ApiWorld();
-      apiWorld.addToRequest(undefined);
-      apiWorld.request.should.eql({});
-    });
-
-    it('should ignore null objects', () => {
-      const apiWorld = new ApiWorld();
-      apiWorld.addToRequest(null);
-      apiWorld.request.should.eql({});
+      it('should treat an empty object key as a sub-path', () => {
+        const apiWorld = new ApiWorld();
+        apiWorld.addToRequest('', { '': 'data', foo: 'bar' });
+        apiWorld.request.should.eql({ data: { foo: 'bar' } });
+      });
     });
   });
 });

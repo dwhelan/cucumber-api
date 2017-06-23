@@ -48,7 +48,6 @@ const ApiWorld = class ApiWorld {
   }
 
   httpPost(path, request, headers) {
-    this.request = request;
     return this.httpRequest('post', path, headers);
   }
 
@@ -83,17 +82,15 @@ const ApiWorld = class ApiWorld {
       .value();
   }
 
-  addToRequest(object, ...path) {
-    if (_.isEmpty(object)) {
-      return;
-    }
-    const obj = _.clone(object);
-    delete obj[''];
-    _.forEach(obj, (value, key) => _.set(this.request, ApiWorld.buildPath(path, object[''], key), value));
-  }
-
-  addManyToRequest(objects, ...path) {
-    _.forEach(objects, object => this.addToRequest(object, path));
+  addToRequest(path, ...objects) {
+    _.forEach(_.flatten(objects), object => {
+      if (_.isEmpty(object)) {
+        return;
+      }
+      const obj = _.clone(object);
+      delete obj[''];
+      _.forEach(obj, (value, key) => _.set(this.request, ApiWorld.buildPath(path, object[''], key), value));
+    });
   }
 
   fieldNameOf(model, fieldOrDescription) {
