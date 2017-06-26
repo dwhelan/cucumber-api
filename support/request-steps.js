@@ -2,16 +2,8 @@
 
 const {defineSupportCode} = require(process.cwd() + '/node_modules/cucumber');
 
-const pathRegExp = '(?:an? +)?((?:")[^"]*(?:"))?';
-
 defineSupportCode(function({Given, When, Then}) {
-  When(/^I get from "([^"]*)"$/i, function(uri) {
-    return this.httpGet(uri);
-  });
-
-  When(/^I get from "([^"]*)" with headers$/i, function(uri, headers) {
-    return this.httpGet(uri, headers.rowsHash());
-  });
+  const pathRegExp = '(?:an? +)?((?:")[^"]*(?:"))?';
 
   /*
     Matches:
@@ -27,5 +19,13 @@ defineSupportCode(function({Given, When, Then}) {
   */
   Given(new RegExp(`I (?:build a request(?: *with)?|add) *${pathRegExp}$`), function (path, table) {
     this.addToRequest(path, table.hashes());
+  });
+
+  When(/^I get from "([^"]*)"$/i, function(uri) {
+    return this.httpGet(uri);
+  });
+
+  When(/^I get from "([^"]*)" with headers$/i, function(uri, headers) {
+    return this.httpGet(uri, headers.rowsHash());
   });
 });
