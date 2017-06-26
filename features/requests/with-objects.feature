@@ -21,7 +21,7 @@ Feature: Creating requests from a table of objects
     {
       "foo": {
         "a": "a1",
-        "b": "b1"
+        "b": "b1" 
       }
     }
     """
