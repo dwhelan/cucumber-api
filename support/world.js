@@ -11,7 +11,7 @@ const chai = require('chai');
 const expect = chai.expect;
 chai.should();
 
-const ApiWorld = class ApiWorld {
+const World = class World {
   constructor(config) {
     this.request  = {};
     this.response = {};
@@ -70,7 +70,7 @@ const ApiWorld = class ApiWorld {
     }
   }
 
-  static buildPath(...pathElements) {
+  buildPath(...pathElements) {
     return _
       .chain(pathElements)
       .flattenDeep()
@@ -89,7 +89,7 @@ const ApiWorld = class ApiWorld {
       }
       const obj = _.clone(object);
       delete obj[''];
-      _.forEach(obj, (value, key) => _.set(this.request, ApiWorld.buildPath(path, object[''], key), value));
+      _.forEach(obj, (value, key) => _.set(this.request, this.buildPath(path, object[''], key), value));
     });
   }
 
@@ -108,8 +108,8 @@ const ApiWorld = class ApiWorld {
   }
 };
 
-module.exports = ApiWorld;
+module.exports = World;
 
 defineSupportCode(function({setWorldConstructor}) {
-  setWorldConstructor(ApiWorld);
+  setWorldConstructor(World);
 });
