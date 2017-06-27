@@ -5,11 +5,11 @@ const _ = require('lodash');
 const {defineSupportCode} = require(process.cwd() + '/node_modules/cucumber');
 
 defineSupportCode(function({When, Then}) {
-  When(/^I build a request with$/i, function(table) {
+  When(/^I build a request(?: by rows)? with$/i, function(table) {
     this.addManyToRequest(table.hashes());
   });
 
-  When(/^I build a request with columns$/i, function(table) {
+  When(/^I build a request by columns with$/i, function(table) {
     const copy = _.zip.apply(_, table.raw());
     var keys = copy[0];
     var valuesArray = copy.slice(1);
