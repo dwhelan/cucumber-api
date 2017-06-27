@@ -11,7 +11,7 @@ const chai = require('chai');
 const expect = chai.expect;
 chai.should();
 
-const ApiWorld = class ApiWorld {
+const World = class World {
   constructor(config) {
     this.request  = {};
     this.response = {};
@@ -48,7 +48,6 @@ const ApiWorld = class ApiWorld {
   }
 
   httpPost(path, request, headers) {
-    this.request = request;
     return this.httpRequest('post', path, headers);
   }
 
@@ -71,27 +70,27 @@ const ApiWorld = class ApiWorld {
     }
   }
 
-  static buildPath(...pathElements) {
+  buildPath(...pathElements) {
     return _
       .chain(pathElements)
       .flattenDeep()
       .compact()
+      .map(pathElement => pathElement.split('.'))
+      .flattenDeep()
       .map(pathElement => _.camelCase(pathElement))
       .join('.')
       .value();
   }
 
-  addToRequest(object, ...path) {
-    if (_.isEmpty(object)) {
-      return;
-    }
-    const obj = _.clone(object);
-    delete obj[''];
-    _.forEach(obj, (value, key) => _.set(this.request, ApiWorld.buildPath(path, object[''], key), value));
-  }
-
-  addManyToRequest(objects, ...path) {
-    _.forEach(objects, object => this.addToRequest(object, path));
+  addToRequest(path, ...objects) {
+    _.forEach(_.flatten(objects), object => {
+      if (_.isEmpty(object)) {
+        return;
+      }
+      const obj = _.clone(object);
+      delete obj[''];
+      _.forEach(obj, (value, key) => _.set(this.request, this.buildPath(path, object[''], key), value));
+    });
   }
 
   fieldNameOf(model, fieldOrDescription) {
@@ -109,8 +108,8 @@ const ApiWorld = class ApiWorld {
   }
 };
 
-module.exports = ApiWorld;
+module.exports = World;
 
 defineSupportCode(function({setWorldConstructor}) {
-  setWorldConstructor(ApiWorld);
+  setWorldConstructor(World);
 });

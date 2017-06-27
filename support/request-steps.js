@@ -4,9 +4,27 @@ const _ = require('lodash');
 
 const {defineSupportCode} = require(process.cwd() + '/node_modules/cucumber');
 
-defineSupportCode(function({When, Then}) {
+defineSupportCode(function({Given, When, Then}) {
+  const pathRegExp = '(?:an? +)?((?:")[^"]*(?:"))?';
+
+  /*
+    Matches:
+      I build a request
+      I build a request with
+      I build a request with a 'foo"
+      I build a request with an 'ardvaark"
+      I add
+      I add a
+      I add an
+      I add a "foo"
+      I add an "ardvaark"
+  */
   When(/^I build a request(?: by rows)? with$/i, function(table) {
-    this.addManyToRequest(table.hashes());
+    this.addToRequest('', table.hashes());
+  });
+
+  Given(new RegExp(`I add(?: by rows)?(?: with)? *${pathRegExp}$`), function (path, table) {
+    this.addToRequest('', path, table.hashes());
   });
 
   When(/^I build a request by columns with$/i, function(table) {
@@ -15,6 +33,6 @@ defineSupportCode(function({When, Then}) {
     var valuesArray = copy.slice(1);
     var columns = valuesArray.map(values => _.zipObject(keys, values));
 
-    this.addManyToRequest(columns);
+    this.addToRequest('', columns);
   });
 });
