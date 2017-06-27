@@ -1,8 +1,8 @@
-Feature: Creating request objects from a table of hashes
+Feature: Creating a request object by rows of objects
 
-  Scenario: Create request from a table of hashes
+  Scenario: Should use header row for keys
     When I build a request with
-      | A  | B  |
+      | a  | b  |
       | a1 | b1 |
     Then the request should be
     """
@@ -12,9 +12,9 @@ Feature: Creating request objects from a table of hashes
     }
     """
 
-  Scenario: A blank column should be used as a key for values in the row
+  Scenario: Should use a column with an empty header cell for keys
     When I build a request with
-      |     | A  | B  |
+      |     | a  | b  |
       | foo | a1 | b1 |
     Then the request should be
     """
