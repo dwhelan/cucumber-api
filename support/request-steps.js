@@ -1,9 +1,6 @@
 'use strict';
 
-const chai = require('chai');
-const chaiHttp = require('chai-http');
-
-chai.use(chaiHttp);
+const _ = require('lodash');
 
 const {defineSupportCode} = require(process.cwd() + '/node_modules/cucumber');
 
@@ -12,7 +9,12 @@ defineSupportCode(function({When, Then}) {
     this.addManyToRequest(table.hashes());
   });
 
-  Then('the request should be', function (json) {
-    this.request.should.eql(JSON.parse(json));
+  When(/^I build a request with columns$/i, function(table) {
+    const copy = _.zip.apply(_, table.raw());
+    var keys = copy[0];
+    var valuesArray = copy.slice(1);
+    var columns = valuesArray.map(values => _.zipObject(keys, values));
+
+    this.addManyToRequest(columns);
   });
 });
