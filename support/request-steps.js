@@ -1,7 +1,5 @@
 'use strict';
 
-const _ = require('lodash');
-
 const {defineSupportCode} = require(process.cwd() + '/node_modules/cucumber');
 
 defineSupportCode(function({Given, When, Then}) {

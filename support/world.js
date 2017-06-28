@@ -11,11 +11,27 @@ const chai = require('chai');
 const expect = chai.expect;
 chai.should();
 
+const Table = class Table {
+  toObjects(table, mechanism) {
+    if (mechanism === 'columns') {
+      const copy    = _.zip.apply(_, table.raw());
+      const keys    = copy[0];
+      const values  = copy.slice(1);
+      const columns = values.map(value => _.zipObject(keys, value));
+
+      return columns;
+    } else {
+      return table.hashes();
+    }
+  }
+};
+
 const World = class World {
   constructor(config) {
     this.request  = {};
     this.response = {};
     this.swagger  = {};
+    this.table    = new Table();
 
     try {
       this.server = new URL(config.parameters.server).toString().slice(0, -1);
@@ -108,16 +124,7 @@ const World = class World {
   }
 
   addTable(table, mechanism, path) {
-    if (mechanism === 'columns') {
-      const copy    = _.zip.apply(_, table.raw());
-      const keys    = copy[0];
-      const values  = copy.slice(1);
-      const columns = values.map(value => _.zipObject(keys, value));
-
-      this.addToRequest(path, columns);
-    } else {
-      this.addToRequest(path, table.hashes());
-    }
+    this.addToRequest(path, this.table.toObjects(table, mechanism));
   }
 };
 
