@@ -1,6 +1,6 @@
 {
   "name": "cucumber-api",
-  "version": "0.0.12",
+  "version": "0.0.13",
   "license": "UNLICENSED",
   "description": "Cucumber support for testing APIs",
   "repository": {
