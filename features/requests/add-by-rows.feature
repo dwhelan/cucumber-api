@@ -1,4 +1,4 @@
-Feature: Creating a request object by rows of objects
+Feature: Add objects to requests by row
 
   Scenario: Should use header row for keys
     When I add by rows

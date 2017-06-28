@@ -1,4 +1,4 @@
-Feature: Creating a request object by columns of objects
+Feature: Add objects to requests by columns
 
   Scenario: Should use header column for keys
     When I add by columns
