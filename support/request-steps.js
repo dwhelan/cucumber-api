@@ -27,15 +27,6 @@ defineSupportCode(function({Given, When, Then}) {
   });
 
   Given(new RegExp(`I ${verb}(?: an?)?${path}${array}${mechanism}$`), function (path, array, mechanism, table) {
-    if (mechanism === 'columns') {
-      const copy = _.zip.apply(_, table.raw());
-      var keys = copy[0];
-      var values = copy.slice(1);
-      var columns = values.map(value => _.zipObject(keys, value));
-
-      this.addToRequest(path, columns);
-    } else {
-      this.addToRequest(path, table.hashes());
-    }
+    this.addTable(table, mechanism, path);
   });
 });
