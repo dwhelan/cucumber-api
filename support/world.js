@@ -100,7 +100,11 @@ const World = class World {
 
   parse(value) {
     try {
-      return JSON.parse(value);
+      if (_.isString(value) && _.startsWith(value, '"') && _.endsWith(value, '"')) {
+        return _.trim(value, '"');
+      } else {
+        return JSON.parse(value);
+      }
     } catch (err) {
       return value;
     }
