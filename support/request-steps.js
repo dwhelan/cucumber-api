@@ -1,5 +1,7 @@
 'use strict';
 
+const _ = require('lodash');
+
 const {defineSupportCode} = require(process.cwd() + '/node_modules/cucumber');
 
 defineSupportCode(function({Given, When, Then}) {
@@ -17,15 +19,20 @@ defineSupportCode(function({Given, When, Then}) {
       I add a "foo"
       I add an "ardvaark"
   */
-  Given(new RegExp(`I (?:build a request(?: *with)?|add) *${pathRegExp}$`), function (path, table) {
-    this.addToRequest(path, table.hashes());
+  When(/^I build a request(?: by rows)? with$/i, function(table) {
+    this.addToRequest('', table.hashes());
   });
 
-  When(/^I get from "([^"]*)"$/i, function(uri) {
-    return this.httpGet(uri);
+  Given(new RegExp(`I add(?: by rows)?(?: with)? *${pathRegExp}$`), function (path, table) {
+    this.addToRequest('', path, table.hashes());
   });
 
-  When(/^I get from "([^"]*)" with headers$/i, function(uri, headers) {
-    return this.httpGet(uri, headers.rowsHash());
+  When(/^I build a request by columns with$/i, function(table) {
+    const copy = _.zip.apply(_, table.raw());
+    var keys = copy[0];
+    var valuesArray = copy.slice(1);
+    var columns = valuesArray.map(values => _.zipObject(keys, values));
+
+    this.addToRequest('', columns);
   });
 });
