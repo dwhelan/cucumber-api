@@ -141,6 +141,10 @@ chai-http@3.x:
     qs "^6.2.0"
     superagent "^2.0.0"
 
+chai-json-equal@0.x:
+  version "0.0.1"
+  resolved "http://10.234.24.10/artifactory/api/npm/mfc-dig-npm/chai-json-equal/-/chai-json-equal-0.0.1.tgz#338fcbbdaec63349379c7c4278c8a28da3b141a1"
+
 chai@3.x:
   version "3.5.0"
   resolved "http://10.234.24.10/artifactory/api/npm/mfc-dig-npm/chai/-/chai-3.5.0.tgz#4d02637b067fe958bdbfdd3a40ec56fef7373247"
@@ -223,13 +227,9 @@ concat-stream@^1.5.2:
     readable-stream "^2.2.2"
     typedarray "^0.0.6"
 
-cookiejar@2.0.x:
+cookiejar@2.0.x, cookiejar@^2.0.6:
   version "2.0.6"
   resolved "http://10.234.24.10/artifactory/api/npm/mfc-dig-npm/cookiejar/-/cookiejar-2.0.6.tgz#0abf356ad00d1c5a219d88d44518046dd026acfe"
-
-cookiejar@^2.0.6:
-  version "2.1.1"
-  resolved "http://10.234.24.10/artifactory/api/npm/mfc-dig-npm/cookiejar/-/cookiejar-2.1.1.tgz#41ad57b1b555951ec171412a81942b1e8200d34a"
 
 core-js@^2.4.0:
   version "2.4.1"
@@ -300,17 +300,11 @@ d@~0.1.1:
   dependencies:
     es5-ext "~0.10.2"
 
-debug@2.6.0:
+debug@2.6.0, debug@^2.1.1, debug@^2.2.0:
   version "2.6.0"
   resolved "http://10.234.24.10/artifactory/api/npm/mfc-dig-npm/debug/-/debug-2.6.0.tgz#bc596bcabe7617f11d9fa15361eded5608b8499b"
   dependencies:
     ms "0.7.2"
-
-debug@^2.1.1, debug@^2.2.0:
-  version "2.6.7"
-  resolved "http://10.234.24.10/artifactory/api/npm/mfc-dig-npm/debug/-/debug-2.6.7.tgz#92bad1f6d05bbb6bba22cca88bcd0ec894c2861e"
-  dependencies:
-    ms "2.0.0"
 
 deep-eql@^0.1.3:
   version "0.1.3"
@@ -912,10 +906,6 @@ mocha@^3.4.2:
 ms@0.7.2:
   version "0.7.2"
   resolved "http://10.234.24.10/artifactory/api/npm/mfc-dig-npm/ms/-/ms-0.7.2.tgz#ae25cf2512b3885a1d95d7f037868d8431124765"
-
-ms@2.0.0:
-  version "2.0.0"
-  resolved "http://10.234.24.10/artifactory/api/npm/mfc-dig-npm/ms/-/ms-2.0.0.tgz#5608aeadfc00be6c2901df5f9861788de0d597c8"
 
 mute-stream@0.0.5:
   version "0.0.5"

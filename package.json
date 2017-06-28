@@ -19,6 +19,7 @@
   "dependencies": {
     "chai": "3.x",
     "chai-http": "3.x",
+    "chai-json-equal": "0.x",
     "cucumber": "2.x",
     "cucumber-html-reporter": "0.x",
     "lodash": "4.x",
