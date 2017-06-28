@@ -11,12 +11,15 @@ yarn add cucumber-api --dev
 ```
 
 # License
-- To be added
+UNLICENSED
 
 # Roadmap
-- support options to configure camel case conversion etc for field names in cukes
-- support complex models with nested models and arrays etc.
-- disable logging when running with 'app'
+* requests
+* responses
+* execution
+  * disable logging when running with 'app'
+* options
+  * configure camel case conversion etc for field names
 
 # Known Issues
 - To be added
