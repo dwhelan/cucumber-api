@@ -56,3 +56,14 @@ Feature: Add arrays to rquests by rows
       "bar": [ "a2", "b2" ]
     }
     """
+
+  Scenario: Should support sparse arrays
+    When I add a foo array
+      | 0  | 2  |
+      | a1 | b1 |
+    Then the request should be
+    """
+    {
+      "foo": [ "a1", null, "b1" ]
+    }
+    """
