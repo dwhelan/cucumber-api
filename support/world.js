@@ -98,6 +98,14 @@ const World = class World {
       .value();
   }
 
+  parse(value) {
+    try {
+      return JSON.parse(value);
+    } catch (err) {
+      return value;
+    }
+  }
+
   addToRequest(path, ...objects) {
     _.forEach(_.flatten(objects), object => {
       if (_.isEmpty(object)) {
@@ -105,7 +113,7 @@ const World = class World {
       }
       const obj = _.clone(object);
       delete obj[''];
-      _.forEach(obj, (value, key) => _.set(this.request, this.buildPath(path, object[''], key), value));
+      _.forEach(obj, (value, key) => _.set(this.request, this.buildPath(path, object[''], key), this.parse(value)));
     });
   }
 

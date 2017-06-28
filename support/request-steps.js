@@ -8,18 +8,6 @@ defineSupportCode(function({Given, When, Then}) {
   const path      = '((?: "?)[^"]*?(?:"?))??';
   const mechanism = '(?: by (rows|columns))?';
 
-  /*
-    Matches:
-      I build a request
-      I build a request with
-      I build a request with a 'foo"
-      I build a request with an 'ardvaark"
-      I add
-      I add a
-      I add an
-      I add a "foo"
-      I add an "ardvaark"
-  */
   When(/^I build a request(?: by rows)?$/i, function(table) {
     this.addToRequest('', table.hashes());
   });
