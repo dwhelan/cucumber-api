@@ -11,20 +11,7 @@ const chai = require('chai');
 const expect = chai.expect;
 chai.should();
 
-const Table = class Table {
-  toObjects(table, mechanism) {
-    if (mechanism === 'columns') {
-      const copy    = _.zip.apply(_, table.raw());
-      const keys    = copy[0];
-      const values  = copy.slice(1);
-      const columns = values.map(value => _.zipObject(keys, value));
-
-      return columns;
-    } else {
-      return table.hashes();
-    }
-  }
-};
+const Table = require('./table');
 
 const World = class World {
   constructor(config) {
@@ -110,14 +97,20 @@ const World = class World {
     }
   }
 
-  addToRequest(path, ...objects) {
+  addToRequest(path, asArray, ...objects) {
     _.forEach(_.flatten(objects), object => {
       if (_.isEmpty(object)) {
         return;
       }
       const obj = _.clone(object);
-      delete obj[''];
-      _.forEach(obj, (value, key) => _.set(this.request, this.buildPath(path, object[''], key), this.parse(value)));
+      _.unset(obj, '');
+      _.forEach(obj, (value, key) => {
+        const basePath = this.buildPath(path, object['']);
+        if (_.isEmpty(basePath) && asArray) {
+          throw new Error('Must specify a path when adding arrays');
+        }
+        _.set(this.request, this.buildPath(path, object[''], key), this.parse(value));
+      });
     });
   }
 
@@ -135,8 +128,8 @@ const World = class World {
     return _.get(this.response.body.data, path);
   }
 
-  addTable(table, mechanism, path) {
-    this.addToRequest(path, this.table.toObjects(table, mechanism));
+  addTable(table, byRows, asArray, path) {
+    this.addToRequest(path, asArray, this.table.toObjects(table, byRows));
   }
 };
 

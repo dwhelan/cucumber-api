@@ -15,7 +15,12 @@ UNLICENSED
 
 # Roadmap
 * requests
+  * consider using type from JSON schema for JSON conversion rather than inference
 * responses
+  * enforce correct data types in responses
+  * consider using type from JSON schema for JSON conversion rather than inference
+  * configure use of 'data' as top-level key for valid responses (JSONAPI)
+  * configure use of 'error' as top-level key for error responses (JSONAPI)
 * execution
   * disable logging when running with 'app'
 * options

@@ -12,7 +12,9 @@ defineSupportCode(function({Given, When, Then}) {
     this.addToRequest('', table.hashes());
   });
 
-  Given(new RegExp(`I ${verb}(?: an?)?${path}${array}${mechanism}$`), function (path, array, mechanism, table) {
-    this.addTable(table, mechanism, path);
+  Given(new RegExp(`^I ${verb}(?: an?)?${path}${array}${mechanism}$`), function (path, array, mechanism, table) {
+    const byRows = mechanism !== 'columns';
+    const asArray = array === ' array' || array === ' arrays';
+    this.addTable(table, byRows, asArray, path);
   });
 });

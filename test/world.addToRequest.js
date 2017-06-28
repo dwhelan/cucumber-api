@@ -11,19 +11,19 @@ describe('World.addToRequest()', () => {
 
   describe('object to be added', () => {
     it('should set the request if it has not been initialized', () => {
-      world.addToRequest('', { foo: 'bar' });
+      world.addToRequest('', false, { foo: 'bar' });
       world.request.should.eql({ foo: 'bar' });
     });
 
     it('should add a value if it does not exist', () => {
       world.request = { foo: 'bar' };
-      world.addToRequest('', { foo2: 'bar2'});
+      world.addToRequest('', false, { foo2: 'bar2'});
       world.request.should.eql({ foo: 'bar', foo2: 'bar2' });
     });
 
     it('should overwrite the value if it exists', () => {
       world.request = { foo: 'bar' };
-      world.addToRequest('', { foo: 'baz' });
+      world.addToRequest('', false, { foo: 'baz' });
       world.request.should.eql({ foo: 'baz' });
     });
 
@@ -33,64 +33,64 @@ describe('World.addToRequest()', () => {
     });
 
     it('should allow an empty object array', () => {
-      world.addToRequest('', []);
+      world.addToRequest('', false, []);
       world.request.should.eql({});
     });
 
     it('should add a single object', () => {
-      world.addToRequest('', { a: 1 });
+      world.addToRequest('', false, { a: 1 });
       world.request.should.eql({ a: 1 });
     });
 
     it('should add multiple objects', () => {
-      world.addToRequest('', { a: 1 }, { b: 2 });
+      world.addToRequest('', false, { a: 1 }, { b: 2 });
       world.request.should.eql({ a: 1, b: 2 });
     });
 
     it('should add an object array', () => {
-      world.addToRequest('', [{ a: 1 }, { b: 2 }]);
+      world.addToRequest('', false, [{ a: 1 }, { b: 2 }]);
       world.request.should.eql({ a: 1, b: 2 });
     });
 
     it('should ignore undefined objects', () => {
-      world.addToRequest('', undefined);
+      world.addToRequest('', false, undefined);
       world.request.should.eql({});
     });
 
     it('should ignore null objects', () => {
-      world.addToRequest('', null);
+      world.addToRequest('', false, null);
       world.request.should.eql({});
     });
   });
 
   describe('path to add object at', () => {
     it('should allow an undefined path', () => {
-      world.addToRequest(undefined, { foo: 'bar' });
+      world.addToRequest(undefined, false,  { foo: 'bar' });
       world.request.should.eql({ foo: 'bar' });
     });
 
     it('should use the given path if provided', () => {
-      world.addToRequest('data', { foo: 'bar' });
+      world.addToRequest('data', false, { foo: 'bar' });
       world.request.should.eql({ data: { foo: 'bar' } });
     });
 
     it('should camel case the path', () => {
-      world.addToRequest('Data', { foo: 'bar' });
+      world.addToRequest('Data', false, { foo: 'bar' });
       world.request.should.eql({ data: { foo: 'bar' } });
     });
 
     it('should allow path to be an array', () => {
-      world.addToRequest(['data', 'stuff'], { foo: 'bar' });
+      world.addToRequest(['data', 'stuff'], false, { foo: 'bar' });
       world.request.should.eql({ data: { stuff: { foo: 'bar' } } });
     });
 
     it('should allow path to have multiple parta', () => {
-      world.addToRequest(['Data 1. Data 2', 'stuff'], { foo: 'bar' });
+      world.addToRequest(['Data 1. Data 2', 'stuff'], false, { foo: 'bar' });
       world.request.should.eql({ data1: { data2: { stuff: { foo: 'bar' } } }});
     });
 
     it('should treat an empty object key as a sub-path', () => {
-      world.addToRequest('', { '': 'data', foo: 'bar' });
+      world.addToRequest('', false, { '': 'data', foo: 'bar' });
       world.request.should.eql({ data: { foo: 'bar' } });
     });
   });
