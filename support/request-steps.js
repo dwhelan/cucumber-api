@@ -6,7 +6,8 @@ const {defineSupportCode} = require(process.cwd() + '/node_modules/cucumber');
 
 defineSupportCode(function({Given, When, Then}) {
   const verb      = '(?:add|set|update)';
-  const path      = '(?:an?)?((?: "?)[^"]*?(?:"?))??';
+  const array     = '( arrays?)?';
+  const path      = '((?: "?)[^"]*?(?:"?))??';
   const mechanism = '(?: by (rows|columns))?';
 
   /*
@@ -25,20 +26,7 @@ defineSupportCode(function({Given, When, Then}) {
     this.addToRequest('', table.hashes());
   });
 
-  Given(new RegExp(`I ${verb} ${path}${mechanism}$`), function (path, mechanism, table) {
-    if (mechanism === 'columns') {
-      const copy = _.zip.apply(_, table.raw());
-      var keys = copy[0];
-      var values = copy.slice(1);
-      var columns = values.map(value => _.zipObject(keys, value));
-
-      this.addToRequest(path, columns);
-    } else {
-      this.addToRequest(path, table.hashes());
-    }
-  });
-
-  Given(new RegExp(`I addx an array${path}${mechanism}$`), function (path, mechanism, table) {
+  Given(new RegExp(`I ${verb}(?: an?)?${path}${array}${mechanism}$`), function (path, array, mechanism, table) {
     if (mechanism === 'columns') {
       const copy = _.zip.apply(_, table.raw());
       var keys = copy[0];

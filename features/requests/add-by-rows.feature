@@ -23,7 +23,7 @@ Feature: Add objects to requests by row
       "b": "b1"
     }
     """
- 
+
   Scenario: Should support "set"
     When I set
       | a  | b  |
