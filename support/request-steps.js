@@ -5,7 +5,9 @@ const _ = require('lodash');
 const {defineSupportCode} = require(process.cwd() + '/node_modules/cucumber');
 
 defineSupportCode(function({Given, When, Then}) {
-  const pathRegExp = '(?:an? +)?((?:")[^"]*(?:"))?';
+  const verb      = '(?:add|set|update)';
+  const path      = '(?: an?)?((?: "?)[^"]*?(?:"?))??';
+  const mechanism = '(?: by (rows|columns))?';
 
   /*
     Matches:
@@ -19,20 +21,20 @@ defineSupportCode(function({Given, When, Then}) {
       I add a "foo"
       I add an "ardvaark"
   */
-  When(/^I build a request(?: by rows)? with$/i, function(table) {
+  When(/^I build a request(?: by rows)?$/i, function(table) {
     this.addToRequest('', table.hashes());
   });
 
-  Given(new RegExp(`I add(?: by rows)?(?: with)? *${pathRegExp}$`), function (path, table) {
-    this.addToRequest('', path, table.hashes());
-  });
+  Given(new RegExp(`I ${verb}${path}${mechanism}$`), function (path, mechanism, table) {
+    if (mechanism === 'columns') {
+      const copy = _.zip.apply(_, table.raw());
+      var keys = copy[0];
+      var values = copy.slice(1);
+      var columns = values.map(value => _.zipObject(keys, value));
 
-  When(/^I build a request by columns with$/i, function(table) {
-    const copy = _.zip.apply(_, table.raw());
-    var keys = copy[0];
-    var valuesArray = copy.slice(1);
-    var columns = valuesArray.map(values => _.zipObject(keys, values));
-
-    this.addToRequest('', columns);
+      this.addToRequest(path, columns);
+    } else {
+      this.addToRequest(path, table.hashes());
+    }
   });
 });
