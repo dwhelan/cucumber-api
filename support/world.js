@@ -70,6 +70,8 @@ const World = class World {
     if (expected === 'undefined' || expected === undefined) {
       expect(value).to.be.undefined;
     } else {
+      console.log(this.request);
+      console.log(this.response.body);
       expect(value, `Could not find field '${fieldOrDescription}'`).to.not.be.undefined;
       expect(value.toString(), `Field '${fieldOrDescription}' is not as expected`).to.eql(expected.toString());
     }
@@ -92,7 +94,11 @@ const World = class World {
   }
 
   addToRequest(path, asArray, ...objects) {
-    this.setter.setObjects(this.request, path, objects, {asArray: asArray});
+    this.setter.set(this.request, path, objects, {asArray: asArray});
+  }
+
+  set(path, objects, options) {
+    this.setter.set(this.request, path, objects, options);
   }
 
   fieldNameOf(model, fieldOrDescription) {

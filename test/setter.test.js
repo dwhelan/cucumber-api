@@ -71,24 +71,24 @@ describe('Setter', () => {
     });
   });
 
-  describe('setObjects()', () => {
+  describe('setArray()', () => {
     it('should add each object in the array', () => {
-      setter.setObjects(json, '', [{ a: 1 }, { b: 2 }]);
+      setter.setArray(json, '', [{ a: 1 }, { b: 2 }]);
       json.should.eql({ a: 1, b: 2 });
     });
 
     it('should allow an empty array', () => {
-      setter.setObjects(json, '', []);
+      setter.setArray(json, '', []);
       json.should.eql({});
     });
 
     it('should allow an defined array', () => {
-      setter.setObjects(json, '', undefined);
+      setter.setArray(json, '', undefined);
       json.should.eql({});
     });
 
     it('should allow a null array', () => {
-      setter.setObjects(json, '', null);
+      setter.setArray(json, '', null);
       json.should.eql({});
     });
   });

@@ -27,7 +27,17 @@ const buildPath = function(...pathElements) {
 };
 
 module.exports = class Setter {
-  setObjects(json, path, objects, options) {
+  set(json, path, value, options) {
+    if (_.isArray(value)) {
+      this.setArray(json, path, value, options);
+    } else if (_.isObject(value)) {
+      this.setObject(json, path, value, options);
+    } else {
+      this.setProperty(json, path, value, options);
+    }
+  }
+
+  setArray(json, path, objects, options) {
     _.forEach(_.flatten(objects), object => this.setObject(json, path, object, options));
   }
 
@@ -50,15 +60,5 @@ module.exports = class Setter {
 
   setProperty(json, path, value, options) {
     _.set(json, buildPath(path), parse(value));
-  }
-
-  set(json, path, value, options) {
-    if (_.isArray(value)) {
-      this.setObjects(json, path, value, options);
-    } else if (_.isObject(value)) {
-      this.setObject(json, path, value, options);
-    } else {
-      this.setProperty(json, path, value, options);
-    }
   }
 };
