@@ -2,31 +2,31 @@
 
 const _ = require('lodash');
 
-module.exports = class Setter {
-  parse(value) {
-    try {
-      if (_.isString(value) && _.startsWith(value, '"') && _.endsWith(value, '"')) {
-        return _.trim(value, '"');
-      } else {
-        return JSON.parse(value);
-      }
-    } catch (err) {
-      return value;
+const parse = function(value) {
+  try {
+    if (_.isString(value) && _.startsWith(value, '"') && _.endsWith(value, '"')) {
+      return _.trim(value, '"');
+    } else {
+      return JSON.parse(value);
     }
+  } catch (err) {
+    return value;
   }
+};
 
-  buildPath(...pathElements) {
-    return _
-      .chain(pathElements)
-      .flattenDeep()
-      .compact()
-      .map(pathElement => pathElement.split('.'))
-      .flattenDeep()
-      .map(pathElement => _.camelCase(pathElement))
-      .join('.')
-      .value();
-  }
+const buildPath = function(...pathElements) {
+  return _
+    .chain(pathElements)
+    .flattenDeep()
+    .compact()
+    .map(pathElement => pathElement.split('.'))
+    .flattenDeep()
+    .map(pathElement => _.camelCase(pathElement))
+    .join('.')
+    .value();
+};
 
+module.exports = class Setter {
   setObjects(json, path, objects, options) {
     _.forEach(_.flatten(objects), object => this.setObject(json, path, object, options));
   }
@@ -40,7 +40,7 @@ module.exports = class Setter {
     _.unset(obj, '');
 
     _.forEach(obj, (value, key) => {
-      const basePath = this.buildPath(path, object['']);
+      const basePath = buildPath(path, object['']);
       if (_.isEmpty(basePath) && options && options.asArray) {
         throw new Error('Must specify a path when adding as array');
       }
@@ -49,7 +49,7 @@ module.exports = class Setter {
   }
 
   setProperty(json, path, value) {
-    _.set(json, this.buildPath(path), this.parse(value));
+    _.set(json, buildPath(path), parse(value));
   }
 
   set(json, path, value) {
