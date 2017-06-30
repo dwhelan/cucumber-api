@@ -12,6 +12,7 @@ const expect = chai.expect;
 chai.should();
 
 const Table = require('./table');
+const Setter = require('./setter');
 
 const World = class World {
   constructor(config) {
@@ -19,6 +20,7 @@ const World = class World {
     this.response = {};
     this.swagger  = {};
     this.table    = new Table();
+    this.setter   = new Setter();
 
     try {
       this.server = new URL(config.parameters.server).toString().slice(0, -1);
@@ -74,15 +76,7 @@ const World = class World {
   }
 
   buildPath(...pathElements) {
-    return _
-      .chain(pathElements)
-      .flattenDeep()
-      .compact()
-      .map(pathElement => pathElement.split('.'))
-      .flattenDeep()
-      .map(pathElement => _.camelCase(pathElement))
-      .join('.')
-      .value();
+    return this.setter.buildPath(...pathElements);
   }
 
   parse(value) {
@@ -98,20 +92,7 @@ const World = class World {
   }
 
   addToRequest(path, asArray, ...objects) {
-    _.forEach(_.flatten(objects), object => {
-      if (_.isEmpty(object)) {
-        return;
-      }
-      const obj = _.clone(object);
-      _.unset(obj, '');
-      _.forEach(obj, (value, key) => {
-        const basePath = this.buildPath(path, object['']);
-        if (_.isEmpty(basePath) && asArray) {
-          throw new Error('Must specify a path when adding arrays');
-        }
-        _.set(this.request, this.buildPath(path, object[''], key), this.parse(value));
-      });
-    });
+    this.setter.setObjects(this.request, path, objects, {asArray: asArray});
   }
 
   fieldNameOf(model, fieldOrDescription) {
