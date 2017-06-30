@@ -48,11 +48,17 @@ module.exports = class Setter {
     });
   }
 
-  setProperty(json, path, value) {
+  setProperty(json, path, value, options) {
     _.set(json, buildPath(path), parse(value));
   }
 
-  set(json, path, value) {
-    _.set(json, path, this.parse(value));
+  set(json, path, value, options) {
+    if (_.isArray(value)) {
+      this.setObjects(json, path, value, options);
+    } else if (_.isObject(value)) {
+      this.setObject(json, path, value, options);
+    } else {
+      this.setProperty(json, path, value, options);
+    }
   }
 };

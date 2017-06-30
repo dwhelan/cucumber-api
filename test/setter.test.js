@@ -92,4 +92,21 @@ describe('Setter', () => {
       json.should.eql({});
     });
   });
+
+  describe('set()', () => {
+    it('should add arrays', () => {
+      setter.set(json, '', [{ a: 1 }, { b: 2 }]);
+      json.should.eql({ a: 1, b: 2 });
+    });
+
+    it('should add objects', () => {
+      setter.set(json, '', { a: 1 });
+      json.should.eql({ a: 1 });
+    });
+
+    it('should add properties', () => {
+      setter.set(json, 'foo', 'bar');
+      json.should.eql({ foo: 'bar' });
+    });
+  });
 });
