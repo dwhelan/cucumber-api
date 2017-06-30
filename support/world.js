@@ -70,8 +70,6 @@ const World = class World {
     if (expected === 'undefined' || expected === undefined) {
       expect(value).to.be.undefined;
     } else {
-      console.log(this.request);
-      console.log(this.response.body);
       expect(value, `Could not find field '${fieldOrDescription}'`).to.not.be.undefined;
       expect(value.toString(), `Field '${fieldOrDescription}' is not as expected`).to.eql(expected.toString());
     }
